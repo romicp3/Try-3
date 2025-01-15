@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday!</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom, #ff9a9e, #fad0c4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: white;
+            overflow: hidden;
+        }
+        #btn {
+            padding: 15px 30px;
+            background: white;
+            color: #ff6b6b;
+            font-size: 1.5em;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            animation: bounce 1s infinite;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+    <button id="btn">Click Me!</button>
+    <canvas id="canvas"></canvas>
+    <script>
+        const btn = document.getElementById('btn');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        btn.addEventListener('click', () => {
+            btn.style.display = 'none';
+            startConfetti();
+        });
+
+        function startConfetti() {
+            const colors = ['#ff6b6b', '#f9c74f', '#06d6a0', '#118ab2', '#8338ec'];
+            let particles = [];
+
+            function createParticle(x, y) {
+                particles.push({
+                    x,
+                    y,
+                    size: Math.random() * 5 + 2,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    velocityX: Math.random() * 4 - 2,
+                    velocityY: Math.random() * 4 - 2
+                });
+            }
+
+            function animateParticles() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach((p, i) => {
+                    ctx.fillStyle = p.color;
+                    ctx.fillRect(p.x, p.y, p.size, p.size);
+                    p.x += p.velocityX;
+                    p.y += p.velocityY;
+                    if (p.size > 0.1) p.size -= 0.1;
+                    if (p.size <= 0) particles.splice(i, 1);
+                });
+                requestAnimationFrame(animateParticles);
+            }
+
+            setInterval(() => {
+                createParticle(Math.random() * canvas.width, Math.random() * canvas.height);
+            }, 50);
+
+            animateParticles();
+        }
+    </script>
+</body>
+</html>
